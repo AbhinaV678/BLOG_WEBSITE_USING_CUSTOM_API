@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 const app = express();
 const port = 4000;
 
-// In-memory data store
+// Hard coded data
 let posts = [
   {
     id: 1,
@@ -33,19 +33,13 @@ let posts = [
 ];
 
 let lastId = posts.length;
-
-// Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//Write your code here//
-
-//CHALLENGE 1: GET All posts
 app.get("/posts",(req,res)=>{
   res.json(posts);
 });
 
-//CHALLENGE 2: GET a specific post by id
 app.get("/posts/:id",(req,res)=>{
   const requiredPost = posts.find((post)=> post.id===parseInt(req.params.id) );
   if(!requiredPost){
@@ -54,7 +48,6 @@ app.get("/posts/:id",(req,res)=>{
   res.json(requiredPost);
 });
 
-//CHALLENGE 3: POST a new post
 app.post("/posts",(req,res)=>{
   lastId = lastId+1;
   const newId = lastId;
@@ -68,7 +61,7 @@ app.post("/posts",(req,res)=>{
   posts.push(newPost);
   res.status(201).json(newPost);
 });
-//CHALLENGE 4: PATCH a post when you just want to update one parameter
+
 app.patch("/posts/:id",(req,res)=>{
   const requiredPostIndex = posts.findIndex((post)=>post.id===parseInt(req.params.id));
   if(requiredPostIndex===-1){
@@ -84,7 +77,7 @@ app.patch("/posts/:id",(req,res)=>{
   posts[requiredPostIndex] = updatedPost;
   res.json(updatedPost);
 });
-//CHALLENGE 5: DELETE a specific post by providing the post id.
+
 app.delete("/posts/:id",(req,res)=>{
   const requiredPostIndex = posts.findIndex((post)=> post.id===parseInt(req.params.id));
   if(requiredPostIndex===-1){
@@ -98,9 +91,3 @@ app.delete("/posts/:id",(req,res)=>{
 app.listen(port, () => {
   console.log(`API is running at http://localhost:${port}`);
 });
-
-//find() returns object whereas findIndex() returns index of first occurence of condition
-
-//warning : posts.findIndex((post)=> post.id===parseInt(req.params.id)) ----> this works.
-//but this : posts.findIndex((post)=> {post.id===parseInt(req.params.id)}) doesnot ! 
-// donot put {} after => in function declaration.
